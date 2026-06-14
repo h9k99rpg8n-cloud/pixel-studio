@@ -6,6 +6,12 @@ import { bindTools } from './tools.js';
 import { saveProject, loadProject, newProject, renameProject, refreshProjectList } from './storage.js';
 import { bindIO } from './io.js';
 
+function autoZoomForSize(size) {
+  if (size >= 128) return 2;
+  if (size >= 64) return 1.5;
+  return 1;
+}
+
 function applyZoom() {
   const visualSize = Math.round(512 * state.zoom);
   state.canvas.style.width = visualSize + 'px';
@@ -34,7 +40,7 @@ function bindUI() {
     saveHistory();
     state.gridSize = Number(els.sizeSelect.value);
     initLayers();
-    state.zoom = state.gridSize === 64 ? 1.5 : 1;
+    state.zoom = autoZoomForSize(state.gridSize);
     applyZoom();
     renderLayers();
     draw();
@@ -49,7 +55,7 @@ function bindUI() {
   };
 
   els.zoomInBtn.onclick = () => {
-    state.zoom = Math.min(3, state.zoom + 0.25);
+    state.zoom = Math.min(4, state.zoom + 0.25);
     applyZoom();
   };
 
@@ -59,7 +65,7 @@ function bindUI() {
   };
 
   els.zoomResetBtn.onclick = () => {
-    state.zoom = 1;
+    state.zoom = autoZoomForSize(state.gridSize);
     applyZoom();
     els.canvasScroll.scrollLeft = 0;
     els.canvasScroll.scrollTop = 0;
@@ -90,6 +96,7 @@ function bindUI() {
 
 bindElements();
 initLayers();
+state.zoom = autoZoomForSize(state.gridSize);
 updateProjectName();
 renderLayers();
 applyZoom();
