@@ -31,11 +31,27 @@ function floodFill(startX, startY, color) {
   }
 }
 
+function makeSelection(start, end) {
+  const x1 = Math.min(start.x, end.x);
+  const y1 = Math.min(start.y, end.y);
+  const x2 = Math.max(start.x, end.x);
+  const y2 = Math.max(start.y, end.y);
+  state.selection = { x: x1, y: y1, w: x2 - x1 + 1, h: y2 - y1 + 1 };
+}
+
 function useTool(event) {
   const point = getPoint(event);
   if (!point) return;
 
   const pixels = getActiveLayer().pixels;
+
+  if (state.tool === 'select') {
+    if (!state.selectionStart) state.selectionStart = point;
+    makeSelection(state.selectionStart, point);
+    setStatus('Seleccion ' + state.selection.w + ' x ' + state.selection.h);
+    draw();
+    return;
+  }
 
   if (state.tool === 'picker') {
     for (let l = state.layers.length - 1; l >= 0; l--) {
@@ -69,16 +85,22 @@ function useTool(event) {
 export function bindTools() {
   state.canvas.onpointerdown = (event) => {
     state.down = true;
+    if (state.tool === 'select') {
+      state.selectionStart = getPoint(event);
+      state.selection = null;
+    }
     if (state.tool === 'pencil' || state.tool === 'eraser') saveHistory();
     useTool(event);
   };
 
   state.canvas.onpointermove = (event) => {
-    if (state.down && (state.tool === 'pencil' || state.tool === 'eraser')) useTool(event);
+    if (!state.down) return;
+    if (state.tool === 'pencil' || state.tool === 'eraser' || state.tool === 'select') useTool(event);
   };
 
   window.onpointerup = () => {
     state.down = false;
+    state.selectionStart = null;
   };
 
   for (let i = 0; i < els.toolButtons.length; i++) {
@@ -91,7 +113,8 @@ export function bindTools() {
         pencil: 'Modo pintar',
         eraser: 'Modo borrar',
         bucket: 'Modo cubeta',
-        picker: 'Modo cuentagotas'
+        picker: 'Modo cuentagotas',
+        select: 'Modo seleccion'
       };
       setStatus(names[state.tool]);
     };
