@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#111827">
   <meta name="description" content="Pixel Studio es un editor web movil para crear texturas pixel art para complementos de Minecraft Bedrock.">
-  <title>Pixel Studio Alfa 0.5.3</title>
+  <title>Pixel Studio Alfa 0.5.4</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,7 @@
     <header class="topbar">
       <div>
         <h1>Pixel Studio</h1>
-        <p>Alfa 0.5.3 - 128x128</p>
+        <p>Alfa 0.5.4 - Paleta de colores</p>
       </div>
       <button id="exportBtn" class="primary-btn icon-btn" title="Exportar PNG">Exportar</button>
     </header>
@@ -43,6 +43,7 @@
         <button class="tab active" data-panel="toolsPanel">Herramientas</button>
         <button class="tab" data-panel="projectPanel">Proyecto</button>
         <button class="tab" data-panel="libraryPanel">Biblioteca</button>
+        <button class="tab" data-panel="palettePanel">Paleta</button>
         <button class="tab" data-panel="layersControlsPanel">Capas</button>
         <button class="tab" data-panel="viewPanel">Vista</button>
       </div>
@@ -67,7 +68,18 @@
 
       <div class="panel-page library-page" id="libraryPanel">
         <div class="project-name" id="projectNameText">Proyecto principal</div>
+        <div class="project-limit">Biblioteca: hasta 340 proyectos</div>
         <div class="project-list" id="projectList"></div>
+      </div>
+
+      <div class="panel-page palette-page" id="palettePanel">
+        <button id="addFavoriteColorBtn" class="mini-btn">Favorito +</button>
+        <div class="palette-section-title">Favoritos</div>
+        <div class="color-row" id="favoriteColors"></div>
+        <div class="palette-section-title">Recientes</div>
+        <div class="color-row" id="recentColors"></div>
+        <div class="palette-section-title">Mas usados</div>
+        <div class="color-row" id="usedColors"></div>
       </div>
 
       <div class="panel-page" id="layersControlsPanel">
