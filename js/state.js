@@ -8,7 +8,9 @@ export const state = {
   layers: [],
   active: 0,
   undo: [],
-  redo: []
+  redo: [],
+  currentProjectId: 'main-project',
+  currentProjectName: 'Proyecto principal'
 };
 
 export const els = {};
@@ -26,6 +28,8 @@ export function bindElements() {
   els.canvasScroll = document.getElementById('canvasScroll');
   els.saveBtn = document.getElementById('saveBtn');
   els.loadBtn = document.getElementById('loadBtn');
+  els.newProjectBtn = document.getElementById('newProjectBtn');
+  els.renameProjectBtn = document.getElementById('renameProjectBtn');
   els.undoBtn = document.getElementById('undoBtn');
   els.redoBtn = document.getElementById('redoBtn');
   els.addLayerBtn = document.getElementById('addLayerBtn');
@@ -34,6 +38,8 @@ export function bindElements() {
   els.importBtn = document.getElementById('importBtn');
   els.importInput = document.getElementById('importInput');
   els.layersPanel = document.getElementById('layersPanel');
+  els.projectList = document.getElementById('projectList');
+  els.projectNameText = document.getElementById('projectNameText');
   els.toolButtons = document.querySelectorAll('[data-tool]');
 
   state.canvas = els.canvas;
@@ -43,4 +49,8 @@ export function bindElements() {
 
 export function setStatus(text) {
   els.statusText.textContent = text;
+}
+
+export function updateProjectName() {
+  if (els.projectNameText) els.projectNameText.textContent = state.currentProjectName;
 }
