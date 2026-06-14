@@ -134,36 +134,41 @@ zoomResetBtn.onclick = function() {
   canvasScroll.scrollTop = 0;
 };
 
-exportBtn.onclick = function() {
-  try {
-    var out = document.createElement('canvas');
-    out.width = gridSize;
-    out.height = gridSize;
-    var outCtx = out.getContext('2d');
-    outCtx.clearRect(0, 0, gridSize, gridSize);
-    for (var y = 0; y < gridSize; y++) {
-      for (var x = 0; x < gridSize; x++) {
-        if (pixels[y][x] !== '') {
-          outCtx.fillStyle = pixels[y][x];
-          outCtx.fillRect(x, y, 1, 1);
-        }
+function exportImage(scale) {
+  var out = document.createElement('canvas');
+  out.width = gridSize * scale;
+  out.height = gridSize * scale;
+  var outCtx = out.getContext('2d');
+  outCtx.imageSmoothingEnabled = false;
+  outCtx.clearRect(0, 0, out.width, out.height);
+  for (var y = 0; y < gridSize; y++) {
+    for (var x = 0; x < gridSize; x++) {
+      if (pixels[y][x] !== '') {
+        outCtx.fillStyle = pixels[y][x];
+        outCtx.fillRect(x * scale, y * scale, scale, scale);
       }
     }
-    out.toBlob(function(blob) {
-      if (!blob) {
-        statusText.textContent = 'No se pudo crear el PNG';
-        return;
-      }
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'pixel-studio-' + gridSize + 'x' + gridSize + '.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
-      statusText.textContent = 'PNG exportado';
-    }, 'image/png');
+  }
+  out.toBlob(function(blob) {
+    if (!blob) {
+      statusText.textContent = 'No se pudo crear el PNG';
+      return;
+    }
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'pixel-studio-' + gridSize + 'x' + gridSize + '-x' + scale + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    statusText.textContent = 'PNG exportado en x' + scale;
+  }, 'image/png');
+}
+
+exportBtn.onclick = function() {
+  try {
+    exportImage(16);
   } catch (error) {
     statusText.textContent = 'Error al exportar PNG';
   }
