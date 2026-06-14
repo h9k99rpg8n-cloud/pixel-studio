@@ -9,12 +9,23 @@ var zoomInBtn = document.getElementById('zoomInBtn');
 var zoomOutBtn = document.getElementById('zoomOutBtn');
 var zoomResetBtn = document.getElementById('zoomResetBtn');
 var canvasScroll = document.getElementById('canvasScroll');
+var saveBtn = document.getElementById('saveBtn');
+var loadBtn = document.getElementById('loadBtn');
+var undoBtn = document.getElementById('undoBtn');
+var redoBtn = document.getElementById('redoBtn');
 
 var gridSize = Number(sizeSelect.value);
 var pixels = [];
 var currentTool = 'pencil';
 var isDown = false;
 var zoom = 1;
+var undoStack = [];
+var redoStack = [];
+var didChangeDuringStroke = false;
+
+function copyPixels(source) {
+  return source.map(function(row) { return row.slice(); });
+}
 
 function resetPixels() {
   pixels = [];
@@ -23,6 +34,19 @@ function resetPixels() {
     for (var x = 0; x < gridSize; x++) row.push('');
     pixels.push(row);
   }
+}
+
+function saveHistory() {
+  undoStack.push({ size: gridSize, data: copyPixels(pixels) });
+  if (undoStack.length > 40) undoStack.shift();
+  redoStack = [];
+}
+
+function restoreState(state) {
+  gridSize = state.size;
+  sizeSelect.value = String(gridSize);
+  pixels = copyPixels(state.data);
+  draw();
 }
 
 function drawChecker() {
@@ -71,22 +95,72 @@ function applyZoom() {
   statusText.textContent = 'Zoom ' + Math.round(zoom * 100) + '%';
 }
 
-function pickPixel(e) {
+function getPoint(e) {
   var rect = canvas.getBoundingClientRect();
   var x = Math.floor((e.clientX - rect.left) / rect.width * gridSize);
   var y = Math.floor((e.clientY - rect.top) / rect.height * gridSize);
-  if (x < 0 || y < 0 || x >= gridSize || y >= gridSize) return;
-  pixels[y][x] = currentTool === 'eraser' ? '' : colorPicker.value;
-  statusText.textContent = 'Pixel ' + x + ', ' + y;
+  if (x < 0 || y < 0 || x >= gridSize || y >= gridSize) return null;
+  return { x: x, y: y };
+}
+
+function setToolButtonActive(button) {
+  var buttons = document.querySelectorAll('[data-tool]');
+  for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
+  button.classList.add('active');
+}
+
+function floodFill(startX, startY, newColor) {
+  var oldColor = pixels[startY][startX];
+  if (oldColor === newColor) return;
+  var stack = [{ x: startX, y: startY }];
+  while (stack.length) {
+    var p = stack.pop();
+    if (p.x < 0 || p.y < 0 || p.x >= gridSize || p.y >= gridSize) continue;
+    if (pixels[p.y][p.x] !== oldColor) continue;
+    pixels[p.y][p.x] = newColor;
+    stack.push({ x: p.x + 1, y: p.y });
+    stack.push({ x: p.x - 1, y: p.y });
+    stack.push({ x: p.x, y: p.y + 1 });
+    stack.push({ x: p.x, y: p.y - 1 });
+  }
+}
+
+function useTool(e) {
+  var p = getPoint(e);
+  if (!p) return;
+  var before = pixels[p.y][p.x];
+
+  if (currentTool === 'picker') {
+    if (before !== '') colorPicker.value = before;
+    statusText.textContent = before === '' ? 'Pixel transparente' : 'Color copiado';
+    return;
+  }
+
+  if (currentTool === 'bucket') {
+    saveHistory();
+    floodFill(p.x, p.y, colorPicker.value);
+    draw();
+    statusText.textContent = 'Cubeta aplicada';
+    return;
+  }
+
+  var nextColor = currentTool === 'eraser' ? '' : colorPicker.value;
+  if (before !== nextColor) {
+    pixels[p.y][p.x] = nextColor;
+    didChangeDuringStroke = true;
+  }
+  statusText.textContent = 'Pixel ' + p.x + ', ' + p.y;
   draw();
 }
 
 canvas.onpointerdown = function(e) {
   isDown = true;
-  pickPixel(e);
+  didChangeDuringStroke = false;
+  if (currentTool === 'pencil' || currentTool === 'eraser') saveHistory();
+  useTool(e);
 };
 canvas.onpointermove = function(e) {
-  if (isDown) pickPixel(e);
+  if (isDown && (currentTool === 'pencil' || currentTool === 'eraser')) useTool(e);
 };
 window.onpointerup = function() {
   isDown = false;
@@ -96,13 +170,14 @@ var buttons = document.querySelectorAll('[data-tool]');
 for (var i = 0; i < buttons.length; i++) {
   buttons[i].onclick = function() {
     currentTool = this.getAttribute('data-tool');
-    for (var j = 0; j < buttons.length; j++) buttons[j].classList.remove('active');
-    this.classList.add('active');
-    statusText.textContent = currentTool === 'pencil' ? 'Modo pintar' : 'Modo borrar';
+    setToolButtonActive(this);
+    var names = { pencil: 'Modo pintar', eraser: 'Modo borrar', bucket: 'Modo cubeta', picker: 'Modo copiar color' };
+    statusText.textContent = names[currentTool] || 'Herramienta lista';
   };
 }
 
 sizeSelect.onchange = function() {
+  saveHistory();
   gridSize = Number(sizeSelect.value);
   resetPixels();
   zoom = gridSize === 64 ? 1.5 : 1;
@@ -112,6 +187,7 @@ sizeSelect.onchange = function() {
 };
 
 clearBtn.onclick = function() {
+  saveHistory();
   resetPixels();
   draw();
   statusText.textContent = 'Lienzo limpio';
@@ -132,6 +208,50 @@ zoomResetBtn.onclick = function() {
   applyZoom();
   canvasScroll.scrollLeft = 0;
   canvasScroll.scrollTop = 0;
+};
+
+saveBtn.onclick = function() {
+  localStorage.setItem('pixelStudioProject', JSON.stringify({ size: gridSize, data: pixels }));
+  statusText.textContent = 'Proyecto guardado';
+};
+
+loadBtn.onclick = function() {
+  var raw = localStorage.getItem('pixelStudioProject');
+  if (!raw) {
+    statusText.textContent = 'No hay proyecto guardado';
+    return;
+  }
+  try {
+    var project = JSON.parse(raw);
+    saveHistory();
+    gridSize = project.size;
+    pixels = project.data;
+    sizeSelect.value = String(gridSize);
+    draw();
+    statusText.textContent = 'Proyecto cargado';
+  } catch (error) {
+    statusText.textContent = 'No se pudo cargar';
+  }
+};
+
+undoBtn.onclick = function() {
+  if (!undoStack.length) {
+    statusText.textContent = 'Nada que deshacer';
+    return;
+  }
+  redoStack.push({ size: gridSize, data: copyPixels(pixels) });
+  restoreState(undoStack.pop());
+  statusText.textContent = 'Deshacer';
+};
+
+redoBtn.onclick = function() {
+  if (!redoStack.length) {
+    statusText.textContent = 'Nada que rehacer';
+    return;
+  }
+  undoStack.push({ size: gridSize, data: copyPixels(pixels) });
+  restoreState(redoStack.pop());
+  statusText.textContent = 'Rehacer';
 };
 
 function exportImage(scale) {
