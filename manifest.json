@@ -1,0 +1,11 @@
+{
+  "name": "Pixel Studio",
+  "short_name": "Pixel Studio",
+  "description": "Editor web movil para crear texturas pixel art para complementos de Minecraft Bedrock.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#111827",
+  "orientation": "portrait",
+  "icons": []
+}
