@@ -40,6 +40,10 @@ export function bindElements() {
   els.layersPanel = document.getElementById('layersPanel');
   els.projectList = document.getElementById('projectList');
   els.projectNameText = document.getElementById('projectNameText');
+  els.addFavoriteColorBtn = document.getElementById('addFavoriteColorBtn');
+  els.favoriteColors = document.getElementById('favoriteColors');
+  els.recentColors = document.getElementById('recentColors');
+  els.usedColors = document.getElementById('usedColors');
   els.toolButtons = document.querySelectorAll('[data-tool]');
 
   state.canvas = els.canvas;
