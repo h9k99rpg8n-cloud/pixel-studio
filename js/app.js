@@ -5,6 +5,7 @@ import { saveHistory, undo, redo } from './history.js';
 import { bindTools } from './tools.js';
 import { saveProject, loadProject, newProject, renameProject, refreshProjectList } from './storage.js';
 import { bindIO } from './io.js';
+import { bindPalette, renderPalette } from './palette.js';
 
 function autoZoomForSize(size) {
   if (size >= 128) return 2;
@@ -31,6 +32,7 @@ function bindTabs() {
       this.classList.add('active');
       document.getElementById(target).classList.add('active');
       if (target === 'libraryPanel') refreshProjectList();
+      if (target === 'palettePanel') renderPalette();
     };
   }
 }
@@ -101,6 +103,7 @@ updateProjectName();
 renderLayers();
 applyZoom();
 bindTabs();
+bindPalette();
 bindTools();
 bindIO();
 bindUI();
