@@ -40,6 +40,7 @@ p {
 .tool,
 .mini-btn,
 .layer-chip,
+.tab,
 select,
 input {
   border: 0;
@@ -51,7 +52,7 @@ input {
   background: #37d67a;
   color: #052e16;
   padding: 12px 14px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .panel {
@@ -61,6 +62,16 @@ input {
   padding: 12px;
   display: grid;
   gap: 12px;
+}
+
+.compact-panel {
+  gap: 10px;
+}
+
+.basic-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 label {
@@ -73,7 +84,7 @@ label {
 select,
 input[type="color"] {
   width: 100%;
-  height: 46px;
+  height: 44px;
   background: #020617;
   color: white;
   padding: 8px;
@@ -84,31 +95,54 @@ input[type="color"] {
   font-size: 0.9rem;
 }
 
-.zoom-row,
-.action-row,
-.layer-row {
+.tabbar {
   display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
-.zoom-row {
-  grid-template-columns: 1fr 1fr 1fr;
+.tab {
+  background: #020617;
+  color: #cbd5e1;
+  padding: 10px 6px;
+  font-weight: 900;
 }
 
-.action-row,
-.layer-row {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+.tab.active {
+  background: #2563eb;
+  color: white;
 }
 
-.mini-btn {
+.panel-page {
+  display: none;
+  gap: 8px;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.panel-page.active {
+  display: grid;
+}
+
+#layersControlsPanel,
+#viewPanel {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.mini-btn,
+.tool {
   background: #1e293b;
   color: white;
-  padding: 11px 8px;
-  font-weight: 800;
+  padding: 12px 7px;
+  font-weight: 900;
 }
 
-.danger-lite {
+.danger-lite,
+.tool.danger {
   background: #7f1d1d;
+}
+
+.tool.active {
+  background: #2563eb;
 }
 
 .layers-panel {
@@ -123,7 +157,7 @@ input[type="color"] {
   background: #1e293b;
   color: #cbd5e1;
   padding: 10px 12px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .layer-chip.active {
@@ -173,34 +207,12 @@ canvas {
   touch-action: none;
 }
 
-.toolbar {
-  position: sticky;
-  bottom: 10px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-}
-
-.tool {
-  background: #1e293b;
-  color: white;
-  padding: 14px 8px;
-  font-weight: 800;
-}
-
-.tool.active {
-  background: #2563eb;
-}
-
-.tool.danger {
-  background: #7f1d1d;
-}
-
 @media (max-width: 420px) {
   .tool,
   .mini-btn,
-  .layer-chip {
-    font-size: 0.78rem;
+  .layer-chip,
+  .tab {
+    font-size: 0.76rem;
     padding-left: 5px;
     padding-right: 5px;
   }
