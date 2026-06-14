@@ -83,10 +83,18 @@ input[type="color"] {
   font-size: 0.9rem;
 }
 
-.zoom-row {
+.zoom-row,
+.action-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
+}
+
+.zoom-row {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.action-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .mini-btn {
@@ -138,14 +146,14 @@ canvas {
   position: sticky;
   bottom: 10px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
 }
 
 .tool {
   background: #1e293b;
   color: white;
-  padding: 14px 10px;
+  padding: 14px 8px;
   font-weight: 800;
 }
 
@@ -155,4 +163,13 @@ canvas {
 
 .tool.danger {
   background: #7f1d1d;
+}
+
+@media (max-width: 420px) {
+  .tool,
+  .mini-btn {
+    font-size: 0.85rem;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }
