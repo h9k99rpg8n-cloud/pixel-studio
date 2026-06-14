@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#111827">
   <meta name="description" content="Pixel Studio es un editor web movil para crear texturas pixel art para complementos de Minecraft Bedrock.">
-  <title>Pixel Studio Alfa 0.5.4</title>
+  <title>Pixel Studio Alfa 0.5.5</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,9 +14,9 @@
     <header class="topbar">
       <div>
         <h1>Pixel Studio</h1>
-        <p>Alfa 0.5.4 - Paleta de colores</p>
+        <p>Alfa 0.5.5 - Iconos y zoom tactil</p>
       </div>
-      <button id="exportBtn" class="primary-btn icon-btn" title="Exportar PNG">Exportar</button>
+      <button id="exportBtn" class="primary-btn icon-btn" title="Exportar PNG"><span data-lucide="download"></span> Exportar</button>
     </header>
 
     <section class="panel compact-panel">
@@ -40,30 +40,20 @@
       <input id="importInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
 
       <div class="tabbar">
-        <button class="tab active" data-panel="toolsPanel">Herramientas</button>
-        <button class="tab" data-panel="projectPanel">Proyecto</button>
-        <button class="tab" data-panel="libraryPanel">Biblioteca</button>
-        <button class="tab" data-panel="palettePanel">Paleta</button>
-        <button class="tab" data-panel="layersControlsPanel">Capas</button>
-        <button class="tab" data-panel="viewPanel">Vista</button>
+        <button class="tab active" data-panel="projectPanel"><span data-lucide="file-cog"></span> Proyecto</button>
+        <button class="tab" data-panel="libraryPanel"><span data-lucide="gallery-horizontal"></span> Biblioteca</button>
+        <button class="tab" data-panel="palettePanel"><span data-lucide="palette"></span> Paleta</button>
+        <button class="tab" data-panel="layersControlsPanel"><span data-lucide="layers"></span> Capas</button>
       </div>
 
-      <div class="panel-page active" id="toolsPanel">
-        <button class="tool active" data-tool="pencil" title="Pintar">Lapiz</button>
-        <button class="tool" data-tool="eraser" title="Borrar">Borrar</button>
-        <button class="tool" data-tool="bucket" title="Cubeta">Cubeta</button>
-        <button class="tool" data-tool="picker" title="Cuentagotas">Gotas</button>
-        <button id="clearBtn" class="tool danger" title="Limpiar capa">Limpiar</button>
-      </div>
-
-      <div class="panel-page" id="projectPanel">
-        <button id="saveBtn" class="mini-btn">Guardar</button>
-        <button id="loadBtn" class="mini-btn">Cargar</button>
-        <button id="newProjectBtn" class="mini-btn">Nuevo</button>
-        <button id="renameProjectBtn" class="mini-btn">Renombrar</button>
-        <button id="importBtn" class="mini-btn">Importar</button>
-        <button id="undoBtn" class="mini-btn">Deshacer</button>
-        <button id="redoBtn" class="mini-btn">Rehacer</button>
+      <div class="panel-page active" id="projectPanel">
+        <button id="saveBtn" class="mini-btn"><span data-lucide="save"></span> Guardar</button>
+        <button id="loadBtn" class="mini-btn"><span data-lucide="folder-open"></span> Cargar</button>
+        <button id="newProjectBtn" class="mini-btn"><span data-lucide="file-plus"></span> Nuevo</button>
+        <button id="renameProjectBtn" class="mini-btn"><span data-lucide="edit-3"></span> Renombrar</button>
+        <button id="importBtn" class="mini-btn"><span data-lucide="image-plus"></span> Importar</button>
+        <button id="undoBtn" class="mini-btn"><span data-lucide="undo-2"></span> Deshacer</button>
+        <button id="redoBtn" class="mini-btn"><span data-lucide="redo-2"></span> Rehacer</button>
       </div>
 
       <div class="panel-page library-page" id="libraryPanel">
@@ -73,7 +63,7 @@
       </div>
 
       <div class="panel-page palette-page" id="palettePanel">
-        <button id="addFavoriteColorBtn" class="mini-btn">Favorito +</button>
+        <button id="addFavoriteColorBtn" class="mini-btn"><span data-lucide="star"></span> Favorito +</button>
         <div class="palette-section-title">Favoritos</div>
         <div class="color-row" id="favoriteColors"></div>
         <div class="palette-section-title">Recientes</div>
@@ -83,15 +73,9 @@
       </div>
 
       <div class="panel-page" id="layersControlsPanel">
-        <button id="addLayerBtn" class="mini-btn">Nueva</button>
-        <button id="toggleLayerBtn" class="mini-btn">Ocultar</button>
-        <button id="deleteLayerBtn" class="mini-btn danger-lite">Eliminar</button>
-      </div>
-
-      <div class="panel-page" id="viewPanel">
-        <button id="zoomOutBtn" class="mini-btn">Zoom -</button>
-        <button id="zoomResetBtn" class="mini-btn">Centrar</button>
-        <button id="zoomInBtn" class="mini-btn">Zoom +</button>
+        <button id="addLayerBtn" class="mini-btn"><span data-lucide="plus"></span> Nueva</button>
+        <button id="toggleLayerBtn" class="mini-btn"><span data-lucide="eye-off"></span> Ocultar</button>
+        <button id="deleteLayerBtn" class="mini-btn danger-lite"><span data-lucide="trash-2"></span> Eliminar</button>
       </div>
 
       <div class="layers-panel" id="layersPanel"></div>
@@ -99,12 +83,20 @@
     </section>
 
     <section class="canvas-card">
+      <div class="floating-tools">
+        <button class="tool active" data-tool="pencil" title="Pintar"><span data-lucide="pencil"></span></button>
+        <button class="tool" data-tool="eraser" title="Borrar"><span data-lucide="eraser"></span></button>
+        <button class="tool" data-tool="bucket" title="Cubeta"><span data-lucide="paint-bucket"></span></button>
+        <button class="tool" data-tool="picker" title="Cuentagotas"><span data-lucide="pipette"></span></button>
+        <button id="clearBtn" class="tool danger" title="Limpiar capa"><span data-lucide="trash"></span></button>
+      </div>
       <div class="canvas-scroll" id="canvasScroll">
         <canvas id="pixelCanvas" width="512" height="512"></canvas>
       </div>
     </section>
   </main>
 
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
