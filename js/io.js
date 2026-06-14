@@ -3,6 +3,27 @@ import { getActiveLayer } from './layers.js';
 import { saveHistory } from './history.js';
 import { draw } from './renderer.js';
 
+function drawCover(ctx, image, size) {
+  const imageRatio = image.width / image.height;
+  const targetRatio = 1;
+  let sx = 0;
+  let sy = 0;
+  let sw = image.width;
+  let sh = image.height;
+
+  if (imageRatio > targetRatio) {
+    sw = image.height * targetRatio;
+    sx = (image.width - sw) / 2;
+  } else if (imageRatio < targetRatio) {
+    sh = image.width / targetRatio;
+    sy = (image.height - sh) / 2;
+  }
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(image, sx, sy, sw, sh, 0, 0, size, size);
+}
+
 export function importImage(file) {
   if (!file) return;
 
@@ -12,9 +33,8 @@ export function importImage(file) {
     const temp = document.createElement('canvas');
     temp.width = state.gridSize;
     temp.height = state.gridSize;
-    const tempCtx = temp.getContext('2d');
-    tempCtx.imageSmoothingEnabled = false;
-    tempCtx.drawImage(image, 0, 0, state.gridSize, state.gridSize);
+    const tempCtx = temp.getContext('2d', { willReadFrequently: true });
+    drawCover(tempCtx, image, state.gridSize);
 
     const data = tempCtx.getImageData(0, 0, state.gridSize, state.gridSize).data;
     const pixels = getActiveLayer().pixels;
@@ -33,7 +53,8 @@ export function importImage(file) {
     }
 
     draw();
-    setStatus('Imagen importada');
+    setStatus('Imagen convertida a ' + state.gridSize + ' x ' + state.gridSize);
+    URL.revokeObjectURL(image.src);
   };
   image.src = URL.createObjectURL(file);
 }
