@@ -7,6 +7,9 @@ import { saveProject, loadProject, newProject, renameProject, refreshProjectList
 import { bindIO } from './io.js';
 import { bindPalette, renderPalette } from './palette.js';
 
+let pinchStartDistance = 0;
+let pinchStartZoom = 1;
+
 function autoZoomForSize(size) {
   if (size >= 128) return 2;
   if (size >= 64) return 1.5;
@@ -18,6 +21,35 @@ function applyZoom() {
   state.canvas.style.width = visualSize + 'px';
   state.canvas.style.height = visualSize + 'px';
   setStatus('Zoom ' + Math.round(state.zoom * 100) + '%');
+}
+
+function distance(touchA, touchB) {
+  const dx = touchA.clientX - touchB.clientX;
+  const dy = touchA.clientY - touchB.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function bindPinchZoom() {
+  els.canvasScroll.addEventListener('touchstart', (event) => {
+    if (event.touches.length === 2) {
+      pinchStartDistance = distance(event.touches[0], event.touches[1]);
+      pinchStartZoom = state.zoom;
+    }
+  }, { passive: true });
+
+  els.canvasScroll.addEventListener('touchmove', (event) => {
+    if (event.touches.length === 2 && pinchStartDistance > 0) {
+      event.preventDefault();
+      const currentDistance = distance(event.touches[0], event.touches[1]);
+      const nextZoom = pinchStartZoom * (currentDistance / pinchStartDistance);
+      state.zoom = Math.min(4, Math.max(0.75, nextZoom));
+      applyZoom();
+    }
+  }, { passive: false });
+
+  els.canvasScroll.addEventListener('touchend', () => {
+    pinchStartDistance = 0;
+  }, { passive: true });
 }
 
 function bindTabs() {
@@ -56,23 +88,6 @@ function bindUI() {
     setStatus('Capa limpia');
   };
 
-  els.zoomInBtn.onclick = () => {
-    state.zoom = Math.min(4, state.zoom + 0.25);
-    applyZoom();
-  };
-
-  els.zoomOutBtn.onclick = () => {
-    state.zoom = Math.max(0.75, state.zoom - 0.25);
-    applyZoom();
-  };
-
-  els.zoomResetBtn.onclick = () => {
-    state.zoom = autoZoomForSize(state.gridSize);
-    applyZoom();
-    els.canvasScroll.scrollLeft = 0;
-    els.canvasScroll.scrollTop = 0;
-  };
-
   els.addLayerBtn.onclick = () => {
     saveHistory();
     addLayer();
@@ -103,9 +118,14 @@ updateProjectName();
 renderLayers();
 applyZoom();
 bindTabs();
+bindPinchZoom();
 bindPalette();
 bindTools();
 bindIO();
 bindUI();
 refreshProjectList();
 draw();
+
+if (window.lucide) {
+  window.lucide.createIcons();
+}
