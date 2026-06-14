@@ -1,0 +1,126 @@
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+p {
+  margin: 4px 0 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.primary-btn,
+.tool,
+select,
+input {
+  border: 0;
+  border-radius: 14px;
+  font-size: 1rem;
+}
+
+.primary-btn {
+  background: #37d67a;
+  color: #052e16;
+  padding: 12px 14px;
+  font-weight: 800;
+}
+
+.panel {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 20px;
+  padding: 12px;
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+select,
+input[type="color"] {
+  width: 100%;
+  height: 46px;
+  background: #020617;
+  color: white;
+  padding: 8px;
+}
+
+.status {
+  color: #93c5fd;
+  font-size: 0.9rem;
+}
+
+.canvas-card {
+  flex: 1;
+  min-height: 320px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: 24px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+}
+
+canvas {
+  width: min(92vw, 512px);
+  height: min(92vw, 512px);
+  image-rendering: pixelated;
+  background: #111827;
+  border-radius: 14px;
+  touch-action: none;
+}
+
+.toolbar {
+  position: sticky;
+  bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.tool {
+  background: #1e293b;
+  color: white;
+  padding: 14px 10px;
+  font-weight: 800;
+}
+
+.tool.active {
+  background: #2563eb;
+}
+
+.tool.danger {
+  background: #7f1d1d;
+}
