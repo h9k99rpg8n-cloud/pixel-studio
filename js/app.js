@@ -13,6 +13,21 @@ function applyZoom() {
   setStatus('Zoom ' + Math.round(state.zoom * 100) + '%');
 }
 
+function bindTabs() {
+  const tabs = document.querySelectorAll('[data-panel]');
+  const pages = document.querySelectorAll('.panel-page');
+
+  for (let i = 0; i < tabs.length; i++) {
+    tabs[i].onclick = function () {
+      const target = this.dataset.panel;
+      for (let j = 0; j < tabs.length; j++) tabs[j].classList.remove('active');
+      for (let k = 0; k < pages.length; k++) pages[k].classList.remove('active');
+      this.classList.add('active');
+      document.getElementById(target).classList.add('active');
+    };
+  }
+}
+
 function bindUI() {
   els.sizeSelect.onchange = () => {
     saveHistory();
@@ -74,6 +89,7 @@ bindElements();
 initLayers();
 renderLayers();
 applyZoom();
+bindTabs();
 bindTools();
 bindIO();
 bindUI();
