@@ -9,6 +9,8 @@ export const state = {
   active: 0,
   undo: [],
   redo: [],
+  selection: null,
+  selectionStart: null,
   currentProjectId: 'main-project',
   currentProjectName: 'Proyecto principal'
 };
