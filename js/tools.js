@@ -2,6 +2,7 @@ import { state, els, setStatus } from './state.js';
 import { getActiveLayer } from './layers.js';
 import { saveHistory } from './history.js';
 import { draw } from './renderer.js';
+import { trackColor } from './palette.js';
 
 function getPoint(event) {
   const rect = state.canvas.getBoundingClientRect();
@@ -41,6 +42,7 @@ function useTool(event) {
       const layer = state.layers[l];
       if (layer.visible && layer.pixels[point.y][point.x]) {
         els.colorPicker.value = layer.pixels[point.y][point.x];
+        trackColor(layer.pixels[point.y][point.x]);
         setStatus('Color copiado');
         return;
       }
@@ -52,12 +54,14 @@ function useTool(event) {
   if (state.tool === 'bucket') {
     saveHistory();
     floodFill(point.x, point.y, els.colorPicker.value);
+    trackColor(els.colorPicker.value);
     draw();
     setStatus('Cubeta aplicada');
     return;
   }
 
   pixels[point.y][point.x] = state.tool === 'eraser' ? '' : els.colorPicker.value;
+  if (state.tool === 'pencil') trackColor(els.colorPicker.value);
   setStatus('Pixel ' + point.x + ', ' + point.y);
   draw();
 }
