@@ -1,9 +1,9 @@
-import { state, els, bindElements, setStatus } from './state.js';
+import { state, els, bindElements, setStatus, updateProjectName } from './state.js';
 import { initLayers, renderLayers, addLayer, toggleLayer, deleteLayer, makePixels } from './layers.js';
 import { draw } from './renderer.js';
 import { saveHistory, undo, redo } from './history.js';
 import { bindTools } from './tools.js';
-import { saveProject, loadProject } from './storage.js';
+import { saveProject, loadProject, newProject, renameProject, refreshProjectList } from './storage.js';
 import { bindIO } from './io.js';
 
 function applyZoom() {
@@ -24,6 +24,7 @@ function bindTabs() {
       for (let k = 0; k < pages.length; k++) pages[k].classList.remove('active');
       this.classList.add('active');
       document.getElementById(target).classList.add('active');
+      if (target === 'libraryPanel') refreshProjectList();
     };
   }
 }
@@ -81,16 +82,20 @@ function bindUI() {
 
   els.saveBtn.onclick = saveProject;
   els.loadBtn.onclick = loadProject;
+  els.newProjectBtn.onclick = newProject;
+  els.renameProjectBtn.onclick = renameProject;
   els.undoBtn.onclick = undo;
   els.redoBtn.onclick = redo;
 }
 
 bindElements();
 initLayers();
+updateProjectName();
 renderLayers();
 applyZoom();
 bindTabs();
 bindTools();
 bindIO();
 bindUI();
+refreshProjectList();
 draw();
