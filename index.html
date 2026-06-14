@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#111827">
   <meta name="description" content="Pixel Studio es un editor web movil para crear texturas pixel art para complementos de Minecraft Bedrock.">
-  <title>Pixel Studio Alfa 0.1</title>
+  <title>Pixel Studio Alfa 0.2</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,7 @@
     <header class="topbar">
       <div>
         <h1>Pixel Studio</h1>
-        <p>Alfa 0.1 - Editor movil de texturas</p>
+        <p>Alfa 0.2 - Editor movil de texturas</p>
       </div>
       <button id="exportBtn" class="primary-btn">Exportar PNG</button>
     </header>
@@ -34,11 +34,19 @@
         <input id="colorPicker" type="color" value="#37d67a">
       </label>
 
+      <div class="zoom-row">
+        <button id="zoomOutBtn" class="mini-btn">Zoom -</button>
+        <button id="zoomResetBtn" class="mini-btn">Centrar</button>
+        <button id="zoomInBtn" class="mini-btn">Zoom +</button>
+      </div>
+
       <div class="status" id="statusText">Listo para pintar</div>
     </section>
 
     <section class="canvas-card">
-      <canvas id="pixelCanvas" width="512" height="512"></canvas>
+      <div class="canvas-scroll" id="canvasScroll">
+        <canvas id="pixelCanvas" width="512" height="512"></canvas>
+      </div>
     </section>
 
     <nav class="toolbar">
