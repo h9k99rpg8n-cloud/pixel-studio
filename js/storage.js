@@ -6,6 +6,7 @@ import { draw } from './renderer.js';
 const DB_NAME = 'PixelStudioDB';
 const DB_VERSION = 1;
 const STORE_NAME = 'projects';
+const MAX_PROJECTS = 340;
 
 function openDatabase() {
   return new Promise((resolve, reject) => {
@@ -96,6 +97,12 @@ export async function refreshProjectList() {
 
 export async function saveProject() {
   try {
+    const projects = await getAllProjects();
+    const exists = projects.some((project) => project.id === state.currentProjectId);
+    if (!exists && projects.length >= MAX_PROJECTS) {
+      setStatus('Limite de 340 proyectos alcanzado');
+      return;
+    }
     await putProject({
       id: state.currentProjectId,
       name: state.currentProjectName,
