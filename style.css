@@ -41,6 +41,7 @@ p {
 .mini-btn,
 .layer-chip,
 .tab,
+.project-card,
 select,
 input {
   border: 0;
@@ -97,7 +98,7 @@ input[type="color"] {
 
 .tabbar {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
 }
 
@@ -123,9 +124,50 @@ input[type="color"] {
   display: grid;
 }
 
+#projectPanel {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 #layersControlsPanel,
 #viewPanel {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.library-page.active {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.project-name {
+  background: #020617;
+  color: #93c5fd;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-weight: 900;
+}
+
+.project-list {
+  display: grid;
+  gap: 8px;
+  max-height: 120px;
+  overflow: auto;
+}
+
+.project-card {
+  text-align: left;
+  background: #1e293b;
+  color: white;
+  padding: 11px 12px;
+  font-weight: 900;
+}
+
+.project-card.active {
+  background: #2563eb;
+}
+
+.empty-projects {
+  color: #94a3b8;
+  font-size: 0.9rem;
 }
 
 .mini-btn,
@@ -211,8 +253,9 @@ canvas {
   .tool,
   .mini-btn,
   .layer-chip,
-  .tab {
-    font-size: 0.76rem;
+  .tab,
+  .project-card {
+    font-size: 0.72rem;
     padding-left: 5px;
     padding-right: 5px;
   }
