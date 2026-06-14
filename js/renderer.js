@@ -25,6 +25,17 @@ function drawGrid(cell) {
   }
 }
 
+function drawSelection(cell) {
+  if (!state.selection) return;
+  const s = state.selection;
+  state.ctx.save();
+  state.ctx.strokeStyle = '#facc15';
+  state.ctx.lineWidth = 3;
+  state.ctx.setLineDash([8, 5]);
+  state.ctx.strokeRect(s.x * cell, s.y * cell, s.w * cell, s.h * cell);
+  state.ctx.restore();
+}
+
 export function draw() {
   const cell = state.canvas.width / state.gridSize;
   drawChecker();
@@ -44,4 +55,5 @@ export function draw() {
   }
 
   drawGrid(cell);
+  drawSelection(cell);
 }
