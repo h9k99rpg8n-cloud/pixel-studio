@@ -42,6 +42,7 @@ p {
 .layer-chip,
 .tab,
 .project-card,
+.color-swatch,
 select,
 input {
   border: 0;
@@ -98,7 +99,7 @@ input[type="color"] {
 
 .tabbar {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 8px;
 }
 
@@ -133,17 +134,26 @@ input[type="color"] {
   grid-template-columns: repeat(3, 1fr);
 }
 
-.library-page.active {
+.library-page.active,
+.palette-page.active {
   display: grid;
   grid-template-columns: 1fr;
 }
 
-.project-name {
+.project-name,
+.project-limit,
+.palette-section-title {
   background: #020617;
   color: #93c5fd;
   border-radius: 14px;
   padding: 10px 12px;
   font-weight: 900;
+}
+
+.project-limit,
+.palette-section-title {
+  color: #94a3b8;
+  font-size: 0.85rem;
 }
 
 .project-list {
@@ -168,6 +178,19 @@ input[type="color"] {
 .empty-projects {
   color: #94a3b8;
   font-size: 0.9rem;
+}
+
+.color-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  min-height: 42px;
+}
+
+.color-swatch {
+  min-width: 38px;
+  height: 38px;
+  border: 2px solid rgba(255,255,255,0.4);
 }
 
 .mini-btn,
@@ -255,8 +278,8 @@ canvas {
   .layer-chip,
   .tab,
   .project-card {
-    font-size: 0.72rem;
-    padding-left: 5px;
-    padding-right: 5px;
+    font-size: 0.68rem;
+    padding-left: 4px;
+    padding-right: 4px;
   }
 }
