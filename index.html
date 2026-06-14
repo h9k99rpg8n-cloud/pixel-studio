@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#111827">
+  <title>Pixel Studio Alfa 0.1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>Pixel Studio</h1>
+        <p>Alfa 0.1 - Editor movil de texturas</p>
+      </div>
+      <button id="exportBtn" class="primary-btn">Exportar PNG</button>
+    </header>
+
+    <section class="panel">
+      <label>
+        Tamano
+        <select id="sizeSelect">
+          <option value="16">16 x 16</option>
+          <option value="32" selected>32 x 32</option>
+          <option value="64">64 x 64</option>
+        </select>
+      </label>
+
+      <label>
+        Color
+        <input id="colorPicker" type="color" value="#37d67a">
+      </label>
+
+      <div class="status" id="statusText">Listo para pintar</div>
+    </section>
+
+    <section class="canvas-card">
+      <canvas id="pixelCanvas" width="512" height="512"></canvas>
+    </section>
+
+    <nav class="toolbar">
+      <button class="tool active" data-tool="pencil">Pintar</button>
+      <button class="tool" data-tool="eraser">Borrar</button>
+      <button id="clearBtn" class="tool danger">Limpiar</button>
+    </nav>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
